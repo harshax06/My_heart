@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import SinglePlayGif from '../SinglePlayGif/SinglePlayGif'
 import { playTrack } from '../../utils/audioManager'
 
 const SPARKLES = Array.from({ length: 24 }, (_, i) => ({
@@ -207,9 +206,10 @@ export default function ConfessionReveal() {
             }}
           />
 
-          <SinglePlayGif
+          <img
             src="/ezgif.com-optimize.gif"
             alt="A special moment"
+            loading="lazy"
             className="w-full"
             style={{ display: 'block', filter: 'brightness(0.95) saturate(1.1)' }}
           />
