@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { playTrack } from '../../utils/audioManager'
 
@@ -19,42 +19,15 @@ const textLines = [
 
 export default function ConfessionReveal() {
   const ref = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
   const inView = useInView(ref, { once: true, amount: 0.25 })
-
+  // Guard: only switch to proposal music once
   const audioSwitchedRef = useRef(false)
 
-  // Trigger audio and play video when scrolled into view
-  useEffect(() => {
-    if (inView) {
-      if (!audioSwitchedRef.current) {
-        audioSwitchedRef.current = true
-        playTrack('proposal')
-      }
-
-      if (videoRef.current) {
-        videoRef.current.play().catch((error) => {
-          console.log("Autoplay was prevented:", error)
-        })
-      }
-    }
-  }, [inView])
-
-  // Doubly-safe JS fallback to guarantee infinite looping
-  useEffect(() => {
-    const videoElement = videoRef.current
-    if (!videoElement) return
-
-    const handleEnded = () => {
-      videoElement.currentTime = 0
-      videoElement.play().catch(() => {})
-    }
-
-    videoElement.addEventListener('ended', handleEnded)
-    return () => {
-      videoElement.removeEventListener('ended', handleEnded)
-    }
-  }, [])
+  // When the section comes into view, stop kalava and start proposal.mp3
+  if (inView && !audioSwitchedRef.current) {
+    audioSwitchedRef.current = true
+    playTrack('proposal')
+  }
 
   return (
     <section
@@ -116,6 +89,7 @@ export default function ConfessionReveal() {
 
       {/* Text content */}
       <div className="relative z-10 text-center max-w-3xl mx-auto mb-12">
+        {/* Decorative top element */}
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -125,6 +99,7 @@ export default function ConfessionReveal() {
           <span className="text-4xl">💭</span>
         </motion.div>
 
+        {/* Text lines with staggered reveal */}
         {textLines.map((line, i) => (
           <motion.p
             key={i}
@@ -147,6 +122,7 @@ export default function ConfessionReveal() {
           </motion.p>
         ))}
 
+        {/* Decorative divider */}
         <motion.div
           initial={{ opacity: 0, scaleX: 0 }}
           animate={inView ? { opacity: 1, scaleX: 1 } : {}}
@@ -165,13 +141,14 @@ export default function ConfessionReveal() {
         </motion.div>
       </div>
 
-      {/* Video Container */}
+      {/* GIF Container */}
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
         animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
         transition={{ duration: 1.2, delay: 3.5, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 w-full flex justify-center"
       >
+        {/* Glow behind the GIF */}
         <motion.div
           className="absolute rounded-3xl"
           style={{
@@ -186,6 +163,7 @@ export default function ConfessionReveal() {
           transition={{ duration: 3, repeat: Infinity }}
         />
 
+        {/* The GIF in a premium frame */}
         <div
           className="relative rounded-2xl overflow-hidden"
           style={{
@@ -198,25 +176,46 @@ export default function ConfessionReveal() {
             `,
           }}
         >
-          <div className="absolute top-0 left-0 w-8 h-8 pointer-events-none" style={{ borderTop: '2px solid rgba(244, 168, 73, 0.4)', borderLeft: '2px solid rgba(244, 168, 73, 0.4)' }} />
-          <div className="absolute top-0 right-0 w-8 h-8 pointer-events-none" style={{ borderTop: '2px solid rgba(244, 168, 73, 0.4)', borderRight: '2px solid rgba(244, 168, 73, 0.4)' }} />
-          <div className="absolute bottom-0 left-0 w-8 h-8 pointer-events-none" style={{ borderBottom: '2px solid rgba(244, 168, 73, 0.4)', borderLeft: '2px solid rgba(244, 168, 73, 0.4)' }} />
-          <div className="absolute bottom-0 right-0 w-8 h-8 pointer-events-none" style={{ borderBottom: '2px solid rgba(244, 168, 73, 0.4)', borderRight: '2px solid rgba(244, 168, 73, 0.4)' }} />
+          {/* Corner accents */}
+          <div
+            className="absolute top-0 left-0 w-8 h-8 pointer-events-none"
+            style={{
+              borderTop: '2px solid rgba(244, 168, 73, 0.4)',
+              borderLeft: '2px solid rgba(244, 168, 73, 0.4)',
+            }}
+          />
+          <div
+            className="absolute top-0 right-0 w-8 h-8 pointer-events-none"
+            style={{
+              borderTop: '2px solid rgba(244, 168, 73, 0.4)',
+              borderRight: '2px solid rgba(244, 168, 73, 0.4)',
+            }}
+          />
+          <div
+            className="absolute bottom-0 left-0 w-8 h-8 pointer-events-none"
+            style={{
+              borderBottom: '2px solid rgba(244, 168, 73, 0.4)',
+              borderLeft: '2px solid rgba(244, 168, 73, 0.4)',
+            }}
+          />
+          <div
+            className="absolute bottom-0 right-0 w-8 h-8 pointer-events-none"
+            style={{
+              borderBottom: '2px solid rgba(244, 168, 73, 0.4)',
+              borderRight: '2px solid rgba(244, 168, 73, 0.4)',
+            }}
+          />
 
-          <video
-            ref={videoRef}
-            src="/ezgif.com-optimize.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
+          <img
+            src="/confession_gif.gif"
+            alt="Confession and proposal animation"
             className="w-full"
             style={{ display: 'block', filter: 'brightness(0.95) saturate(1.1)' }}
           />
         </div>
       </motion.div>
 
+      {/* Bottom text */}
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -232,6 +231,7 @@ export default function ConfessionReveal() {
         One more scroll, Bangaram... this is the part I've been waiting for ❤️
       </motion.p>
 
+      {/* Bottom fade */}
       <div
         className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
         style={{ background: 'linear-gradient(to top, #0a0a0f, transparent)' }}
