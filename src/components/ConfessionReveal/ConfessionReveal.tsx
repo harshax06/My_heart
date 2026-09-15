@@ -22,10 +22,9 @@ export default function ConfessionReveal() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const inView = useInView(ref, { once: true, amount: 0.25 })
 
-  // Guard: only switch to proposal music once
   const audioSwitchedRef = useRef(false)
 
-  // Trigger audio and video playback when scrolled into view
+  // Handle audio and manual video playback trigger on scroll
   useEffect(() => {
     if (inView) {
       if (!audioSwitchedRef.current) {
@@ -33,14 +32,30 @@ export default function ConfessionReveal() {
         playTrack('proposal')
       }
 
-      // Explicitly trigger video play to guarantee it starts
       if (videoRef.current) {
+        videoRef.current.currentTime = 0
         videoRef.current.play().catch((error) => {
           console.log("Autoplay was prevented:", error)
         })
       }
     }
   }, [inView])
+
+  // Manual infinite loop fallback to prevent video from stopping
+  useEffect(() => {
+    const videoElement = videoRef.current
+    if (!videoElement) return
+
+    const handleEnded = () => {
+      videoElement.currentTime = 0
+      videoElement.play().catch(() => {})
+    }
+
+    videoElement.addEventListener('ended', handleEnded)
+    return () => {
+      videoElement.removeEventListener('ended', handleEnded)
+    }
+  }, [])
 
   return (
     <section
@@ -102,7 +117,6 @@ export default function ConfessionReveal() {
 
       {/* Text content */}
       <div className="relative z-10 text-center max-w-3xl mx-auto mb-12">
-        {/* Decorative top element */}
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -112,7 +126,6 @@ export default function ConfessionReveal() {
           <span className="text-4xl">💭</span>
         </motion.div>
 
-        {/* Text lines with staggered reveal */}
         {textLines.map((line, i) => (
           <motion.p
             key={i}
@@ -135,7 +148,6 @@ export default function ConfessionReveal() {
           </motion.p>
         ))}
 
-        {/* Decorative divider */}
         <motion.div
           initial={{ opacity: 0, scaleX: 0 }}
           animate={inView ? { opacity: 1, scaleX: 1 } : {}}
@@ -161,7 +173,6 @@ export default function ConfessionReveal() {
         transition={{ duration: 1.2, delay: 3.5, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 w-full flex justify-center"
       >
-        {/* Glow behind the video */}
         <motion.div
           className="absolute rounded-3xl"
           style={{
@@ -176,7 +187,6 @@ export default function ConfessionReveal() {
           transition={{ duration: 3, repeat: Infinity }}
         />
 
-        {/* Video Frame */}
         <div
           className="relative rounded-2xl overflow-hidden"
           style={{
@@ -189,7 +199,6 @@ export default function ConfessionReveal() {
             `,
           }}
         >
-          {/* Corner accents */}
           <div className="absolute top-0 left-0 w-8 h-8 pointer-events-none" style={{ borderTop: '2px solid rgba(244, 168, 73, 0.4)', borderLeft: '2px solid rgba(244, 168, 73, 0.4)' }} />
           <div className="absolute top-0 right-0 w-8 h-8 pointer-events-none" style={{ borderTop: '2px solid rgba(244, 168, 73, 0.4)', borderRight: '2px solid rgba(244, 168, 73, 0.4)' }} />
           <div className="absolute bottom-0 left-0 w-8 h-8 pointer-events-none" style={{ borderBottom: '2px solid rgba(244, 168, 73, 0.4)', borderLeft: '2px solid rgba(244, 168, 73, 0.4)' }} />
@@ -198,8 +207,6 @@ export default function ConfessionReveal() {
           <video
             ref={videoRef}
             src="/ezgif.com-optimize.mp4"
-            autoPlay
-            loop
             muted
             playsInline
             className="w-full"
@@ -208,7 +215,6 @@ export default function ConfessionReveal() {
         </div>
       </motion.div>
 
-      {/* Bottom text */}
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -224,7 +230,6 @@ export default function ConfessionReveal() {
         One more scroll, Bangaram... this is the part I've been waiting for ❤️
       </motion.p>
 
-      {/* Bottom fade */}
       <div
         className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
         style={{ background: 'linear-gradient(to top, #0a0a0f, transparent)' }}
