@@ -206,10 +206,12 @@ export default function ConfessionReveal() {
             }}
           />
 
-          <img
-            src="/ezgif.com-optimize.gif"
-            alt="A special moment"
-            loading="lazy"
+          <video
+            src="/ezgif.com-optimize.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
             className="w-full"
             style={{ display: 'block', filter: 'brightness(0.95) saturate(1.1)' }}
           />
