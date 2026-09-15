@@ -1,0 +1,308 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== BASE ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  background: #0a0a0f;
+  color: #faf7f5;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ===== TYPOGRAPHY ===== */
+.font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+.font-hand  { font-family: 'Caveat', cursive; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: #e91e8c88; border-radius: 2px; }
+
+/* ===== SECTION TRANSITIONS ===== */
+section { position: relative; }
+
+/* ===== GLOW UTILITIES ===== */
+.glow-rose    { text-shadow: 0 0 30px rgba(233, 30, 140, 0.7), 0 0 60px rgba(233, 30, 140, 0.3); }
+.glow-gold    { text-shadow: 0 0 30px rgba(244, 168, 73, 0.7), 0 0 60px rgba(244, 168, 73, 0.3); }
+.glow-white   { text-shadow: 0 0 20px rgba(250, 247, 245, 0.5); }
+.glow-box-rose { box-shadow: 0 0 40px rgba(233, 30, 140, 0.4), 0 0 80px rgba(233, 30, 140, 0.15); }
+
+/* ===== GRADIENT TEXT ===== */
+.gradient-text-gold {
+  background: linear-gradient(135deg, #f4a849 0%, #ffd166 50%, #f4a849 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerText 3s linear infinite;
+}
+
+.gradient-text-rose {
+  background: linear-gradient(135deg, #e91e8c 0%, #f9a8d4 50%, #e91e8c 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerText 3s linear infinite;
+}
+
+@keyframes shimmerText {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ===== OCEAN WAVE ===== */
+.ocean-layer {
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  width: 120%;
+  pointer-events: none;
+}
+
+.wave-svg {
+  animation: waveMove 6s ease-in-out infinite;
+}
+.wave-svg-2 {
+  animation: waveMove 8s ease-in-out 1s infinite reverse;
+  opacity: 0.5;
+}
+
+@keyframes waveMove {
+  0%, 100% { transform: translateX(0) scaleY(1); }
+  50%       { transform: translateX(-30px) scaleY(0.92); }
+}
+
+/* ===== FIREFLY ===== */
+.firefly {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(244, 168, 73, 0.9);
+  box-shadow: 0 0 8px rgba(244, 168, 73, 0.8), 0 0 16px rgba(244, 168, 73, 0.4);
+  animation: fireflyDrift var(--duration, 8s) ease-in-out var(--delay, 0s) infinite;
+}
+
+@keyframes fireflyDrift {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+  20%  { opacity: 1; }
+  50%  { transform: translate(var(--tx, 40px), var(--ty, -60px)) scale(0.7); opacity: 0.8; }
+  80%  { opacity: 0.3; }
+  100% { transform: translate(var(--tx2, -20px), var(--ty2, -120px)) scale(0.3); opacity: 0; }
+}
+
+/* ===== SUNSET OVERLAY ===== */
+.sunset-shimmer {
+  animation: sunsetShift 8s ease-in-out infinite alternate;
+}
+
+@keyframes sunsetShift {
+  0%   { opacity: 0.55; filter: hue-rotate(0deg); }
+  100% { opacity: 0.75; filter: hue-rotate(15deg); }
+}
+
+/* ===== HEARTBEAT PULSE ===== */
+.heartbeat-anim {
+  animation: heartbeat 1.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14%       { transform: scale(1.18); }
+  28%       { transform: scale(1); }
+  42%       { transform: scale(1.14); }
+  70%       { transform: scale(1); }
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #e91e8c, #f4a849, #f9a8d4);
+  z-index: 9999;
+  transform-origin: left;
+  transition: width 0.1s linear;
+}
+
+.progress-heart {
+  position: fixed;
+  top: -6px;
+  width: 14px;
+  height: 14px;
+  z-index: 9999;
+  filter: drop-shadow(0 0 6px rgba(233,30,140,0.8));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* ===== FLOATING HEARTS (global ambient) ===== */
+.heart-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  animation: floatUp var(--dur, 12s) ease-in var(--del, 0s) infinite;
+  opacity: 0;
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg) scale(0.5); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.2; }
+  100% { transform: translateY(-110vh) translateX(var(--dx, 30px)) rotate(360deg) scale(0.2); opacity: 0; }
+}
+
+/* ===== GIFT BOX ===== */
+.gift-lid {
+  transform-origin: bottom center;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gift-lid.open {
+  transform: translateY(-120%) rotateX(-30deg);
+}
+
+/* ===== CARD FLIP ===== */
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face, .card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
+
+/* ===== SCROLL SNAP (optional soft) ===== */
+.snap-container {
+  scroll-snap-type: y proximity;
+}
+
+/* ===== GLASSMORPHISM ===== */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ===== PREFERS REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .wave-svg, .wave-svg-2 { animation: none; }
+  .firefly { animation: none; opacity: 0.6; }
+}
+
+/* ===== PREMIUM GLAM: POLAROID SHEEN ===== */
+.polaroid-frame { transition: filter 0.4s ease; }
+.polaroid-sheen {
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 232, 179, 0.28) 35%,
+    rgba(255, 232, 179, 0.05) 45%,
+    transparent 60%
+  );
+  background-size: 250% 250%;
+  background-position: 120% 0%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.polaroid-frame:hover .polaroid-sheen {
+  opacity: 1;
+  animation: sheenSweep 1.1s ease forwards;
+}
+@keyframes sheenSweep {
+  0%   { background-position: 130% -20%; }
+  100% { background-position: -30% 60%; }
+}
+
+/* ===== PREMIUM GLAM: FILM GRAIN ===== */
+.grain-overlay {
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 1;
+}
+
+/* ===== PREMIUM GLAM: GOLD FOIL BORDER ===== */
+.foil-border {
+  position: relative;
+}
+.foil-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(244,168,73,0.7), rgba(255,209,102,0.15), rgba(244,168,73,0.7));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ===== CUSTOM CURSOR ===== */
+body.has-custom-cursor,
+body.has-custom-cursor * {
+  cursor: none !important;
+}
+.cursor-ripple {
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  margin-top: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 168, 73, 0.8);
+  pointer-events: none;
+  animation: cursorRipple 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes cursorRipple {
+  0%   { transform: scale(0.4); opacity: 0.9; }
+  100% { transform: scale(5);   opacity: 0;   }
+}
+
+/* ===== HEART-SHAPED PHOTO CLIP ===== */
+/* References the <clipPath id="heartClip"> defined once in App.tsx (objectBoundingBox units, so it scales to any element size) */
+.heart-clip {
+  clip-path: url(#heartClip);
+  aspect-ratio: 1 / 0.92;
+}
+
+/* ===== MOBILE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  .font-serif.display { font-size: clamp(2.5rem, 10vw, 5rem); }
+}
