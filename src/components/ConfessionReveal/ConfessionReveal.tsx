@@ -24,7 +24,7 @@ export default function ConfessionReveal() {
 
   const audioSwitchedRef = useRef(false)
 
-  // Handle audio and manual video playback trigger on scroll
+  // Trigger audio and play video when scrolled into view
   useEffect(() => {
     if (inView) {
       if (!audioSwitchedRef.current) {
@@ -33,7 +33,6 @@ export default function ConfessionReveal() {
       }
 
       if (videoRef.current) {
-        videoRef.current.currentTime = 0
         videoRef.current.play().catch((error) => {
           console.log("Autoplay was prevented:", error)
         })
@@ -41,7 +40,7 @@ export default function ConfessionReveal() {
     }
   }, [inView])
 
-  // Manual infinite loop fallback to prevent video from stopping
+  // Doubly-safe JS fallback to guarantee infinite looping
   useEffect(() => {
     const videoElement = videoRef.current
     if (!videoElement) return
@@ -207,8 +206,11 @@ export default function ConfessionReveal() {
           <video
             ref={videoRef}
             src="/ezgif.com-optimize.mp4"
+            autoPlay
+            loop
             muted
             playsInline
+            preload="auto"
             className="w-full"
             style={{ display: 'block', filter: 'brightness(0.95) saturate(1.1)' }}
           />
