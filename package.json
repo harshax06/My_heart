@@ -16,6 +16,7 @@
   "dependencies": {
     "canvas-confetti": "^1.9.3",
     "framer-motion": "^11.0.0",
+    "gifuct-js": "^2.1.2",
     "gsap": "^3.12.5",
     "howler": "^2.2.4",
     "omggif": "^1.0.10",
